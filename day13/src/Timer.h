@@ -1,3 +1,4 @@
+#pragma once
 #include <sys/timerfd.h>
 #include <time.h>
 #include<sys/time.h>
@@ -19,7 +20,7 @@ public:
         timerCallback();
     }
 
-    Timestamp getExpiration() const  { return expiration_; }
+    Timestamp getExpiration() const { return expiration_; }
     bool getRepeat() const { return repeat_; }
     int getIdx() const { return idx; }
 
