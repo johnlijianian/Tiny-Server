@@ -1,1 +1,15 @@
-1. 对于Channel中的epoll_event指针修改->改为vector<epoll_event>
+2022-03-09 通过引入Timer / TimerId / TimerQueue类以完成定时器的操作。
+    1. TimerId主要记录了Timer的唯一标识符 + Timer
+    2. Timer主要记录了TimeFd的相关参数：超时时间、回调函数、间隔
+    3. TimerQueue是主类：注册加入EventLoop事件中
+        今日停留于加入EventLoop事件中的设计
+
+2022-03-10 继续完善Timer相关实现
+    1. EventLoop的修改（为了支持Timer相关的业务）
+        a) 判断是否在当前线程中
+        b) runInLoop函数设计
+        c) queueInLoop函数设计
+        d) 应该修改：任务队列的设计，如果使用函数指针感觉会出问题。（参考线程池的实现中，引入期约等机制实现）
+    2. 补充了TimeStamp类
+    3. 考虑到1. d)的问题，正在学习C++并发机制，预计（周天看完）
+    4. const引用 -> 常量引用 -> 触发构造函数
