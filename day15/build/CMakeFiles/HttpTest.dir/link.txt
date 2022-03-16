@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++17 -pthread   CMakeFiles/HttpTest.dir/HttpTest.cpp.o  -o HttpTest  -Wl,-rpath,/home/ubuntu/ljn/github/Tiny-Server/day15/build/src src/libMyMuduoLib.so 
