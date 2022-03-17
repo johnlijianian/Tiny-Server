@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/include/Buffer.h
+string
+-
+algorithm
+-
+
+/home/ubuntu/ljn/github/Tiny-Server/day15/src/Buffer.cpp
+Buffer.h
+/home/ubuntu/ljn/github/Tiny-Server/day15/src/Buffer.h
+string
+-
+iostream
+-
+cstring
+-
+

@@ -1,0 +1,59 @@
+2022-03-09 通过引入Timer / TimerId / TimerQueue类以完成定时器的操作。
+    1. TimerId主要记录了Timer的唯一标识符 + Timer
+    2. Timer主要记录了TimeFd的相关参数：超时时间、回调函数、间隔
+    3. TimerQueue是主类：注册加入EventLoop事件中
+        今日停留于加入EventLoop事件中的设计
+
+2022-03-10 继续完善Timer相关实现
+    1. EventLoop的修改（为了支持Timer相关的业务）
+        a) 判断是否在当前线程中
+        b) runInLoop函数设计
+        c) queueInLoop函数设计
+        d) 应该修改：任务队列的设计，如果使用函数指针感觉会出问题。（参考线程池的实现中，引入期约等机制实现）
+    2. 补充了TimeStamp类
+    3. 考虑到1. d)的问题，正在学习C++并发机制，预计（周天看完）
+    4. const引用 -> 常量引用 -> 触发构造函数
+
+2022-03-11 碰到了类似于线程池的实现，所以开始系统学习C++的并行编程
+    1. thread思想
+    2. Mutex
+    3. condition_variable
+
+2022-03-13 完成论文修改
+    1. 我写东西似乎有问题，但我自己还看不出来
+    2. future/promise
+    3. 尝试编写线程池类
+
+2022-03-14 完成线程池的编写
+    1. 线程池实现完毕
+    2. 使用make_shared、future、thread、packaged_task、mutex、condition_variable
+    3. 继续实现TimerQueue
+    4. 完成EventLoop的runInLoop、queueInLoop
+    5. TimerQueue的测试方法
+    6. 开始变为工程化项目
+
+2022-03-15 TimerQueue类以完成
+    1. CMake命令的编写
+    2. TimerQueue的Debug
+    3. 开始Muduo HTTP方法
+    4. 书写论文
+
+2022-03-16 
+    1. Connection重写(原先只有echo服务)
+    2. HTTP实现相关代码
+
+2022-03-17
+    1. 拆解Connection、TcpConnection
+    2. 拆解Server、TcpServer
+    3. 梳理Muduo中的回调函数【整理于record.txt】
+    4. 修改Server类
+
+To do list:
+    1. 定时器（22-03-15完成）
+    2. HTTP实现
+    3. HTTP uri解析
+    4. HTTP Session实现
+    5. HTTPs实现
+    6. 日志系统
+    7. 重构
+    8. 负载均衡

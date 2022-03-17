@@ -1,0 +1,45 @@
+1. 记录一下回调函数
+    Channel
+        - ReadCallback(function<void(Timestamp)>)
+        - WriteCallback(function<void()>)
+        - CloseCallback(function<void()>)
+        - ErrorCallback(function<void()>)
+
+    Acceptor
+        - NewConnectionCallback(function<int sockfd, InetAddress&>) -> channel.ReadCallback
+    
+    TcpConnection
+        - ConnectionCallback(function<void(TcpConnection*)>)
+        - MessageCallback(function<void(TcpConnectionPtr&, char* data, ssize_t len)>) -> channel.ReadCallback
+        - WriteCompleteCallback(function<void (const TcpConnectionPtr&)>) 
+        - HighWaterMarkCallback(function<void (const TcpConnectionPtr&, size_t)>);
+
+    TcpServer
+        - ConnectionCallback(function<void(TcpConnection*)>)
+        - MessageCallback(function<void(TcpConnectionPtr&, char* data, ssize_t len)>)
+
+    HttpServer
+        - HttpCallback(function<void(HttpRequest&, HttpResponse*)>)
+
+
+新连接到达
+    Acceptor相关channel产生读事件
+    -> Acceptor::NewConnectionCallback【实际调用TcpServer::newConnection】
+    ->【TcpServer::newConnection中】设置TcpConnection的ConnectionCallback、MessageCallback、WriteCompleteCallback回调事件
+    （注意TcpConnection::ConnectionCallback，在TcpServer中被设置（defaultConnectionCallback）。同时HttpServer::onConnection可以被绑定于此）
+    ->【TcpServer::newConnection中】调用TcpConnection::connectEstablished【放入EventLoop中执行】
+    -> 【TcpConnection::connectEstablished】调用刚才设置的TcpConnection::ConnectionCallback
+
+新消息到达
+    TcpConnection相关channel产生读事件
+    -> 调用TcpConnection::handleRead
+    -> 【TcpConnection::handleRead中】调用MessageCallback
+    -> MessageCallback在新连接到达时被设置【由TcpServer::newConection函数中设置】
+    -> TcpServer::MessageCallback是由HttpServer的构造函数设置 
+    (总结：HttpServer设置TcpServer的MessageCallBack，TcpServer设置TcpConection的CallBack)
+    -> 【HttpServer::HttpServer中】设置TcpServer::MessageCallBack，即：关联HttpServer::OnMessage()
+    -> 【HttpServer::OnMessage中】调用HttpCallback(HttpRequest, HttpResponse)
+
+换个说法，新连接的注册过程
+    HttpServer::onConnection -> TcpServer::connectionCallback_ 【或者TcpServer::defaultConnectionCallback】
+    
