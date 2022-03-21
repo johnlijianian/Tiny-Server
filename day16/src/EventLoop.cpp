@@ -5,6 +5,7 @@
 #include "TimerId.h"
 #include "TimerQueue.h"
 #include <vector>
+#include <iostream>
 
 #include <sys/eventfd.h>
 
@@ -26,7 +27,7 @@ EventLoop::EventLoop() :
     threadId_(std::this_thread::get_id()),
     wakeupFd_(createEventfd()),
     wakeupChannel_(new Channel(this, wakeupFd_))
-    {
+{
     wakeupChannel_->setReadCallback(
         std::bind(&EventLoop::handleRead, this)
     );
@@ -39,7 +40,7 @@ EventLoop::~EventLoop() {
 }
 
 void EventLoop::loop(){
-    assertInLoopThread();
+    // assertInLoopThread();
     while(!quit){
         std::vector<Channel*> chs;
         chs = ep->poll();
@@ -57,10 +58,13 @@ void EventLoop::updateChannel(Channel *ch){
 }
 
 void EventLoop::runInLoop(std::function<void()> cb){
+    std::cout << "runInLoop..."<<std::endl;
     if(isInLoopThread()){
         // 当前线程，同步执行
+        std::cout << "runInLoop...InLoopThread()"<<std::endl;
         cb();
     } else { // 不是当前线程，所属线程在执行别的任务，所以（加入到队列中 & 唤醒）-> queueInLoop执行
+        std::cout << "runInLoop...NotInLoopThread()"<<std::endl;
         queueInLoop(cb);
     }
 }

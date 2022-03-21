@@ -20,7 +20,7 @@ Connection::Connection(EventLoop *_loop, Socket *_sock)
     if(_loop != nullptr) {
         channel_ = new Channel(loop_, sock_->getFd());
         // channel_->enableRead();
-        // channel_->useET();
+        // 
 
         // channel_->setReadCallback(std::bind(&Connection::handleRead, this));
     }
@@ -41,7 +41,6 @@ Connection::~Connection() {
 
 void Connection::handleRead() {
   std::cout<<"handle Read"<<std::endl;
-
   Read();
   if(read_buffer_->size() > 0){
     onMessageCallback_(this, read_buffer_);
@@ -54,7 +53,10 @@ void Connection::handleRead() {
 } 
 
 void Connection::connectEstablished() {
+  std::cout << "Connection::connectEstablished()" << std::endl;
+  state_ = State::Connected;
   channel_->enableRead();
+  channel_->useET();
   onConnectionCallback_(this);
 }
 
@@ -169,10 +171,16 @@ const char *Connection::SendBuffer() { return send_buffer_->ToStr(); }
 void Connection::SetDeleteConnectionCallback(std::function<void(Socket *)> &cb) {
   deleteConnectionCallback_ = cb;
 }
+void Connection::SetOnMessageCallback(std::function<void(Connection *, Buffer*)> &cb) {
+  onMessageCallback_ = cb;
+}
+
 void Connection::SetOnConnectCallback(std::function<void(Connection *)> &cb) {
-  channel_->setReadCallback(std::bind(&Connection::onConnectionCallback_, this));
+  onConnectionCallback_ = cb;
+  // channel_->setReadCallback(std::bind(&Connection::onConnectionCallback_, this));
 }
 
 void Connection::GetlineSendBuffer() { send_buffer_->getline(); }
+
 
 Socket *Connection::GetSocket() { return sock_; }

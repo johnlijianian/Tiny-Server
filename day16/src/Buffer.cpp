@@ -34,6 +34,7 @@ ssize_t Buffer::size(){
 }
 
 const char* Buffer::ToStr(){
+    std::cout << buf <<std::endl;
     return buf.c_str();
 }
 

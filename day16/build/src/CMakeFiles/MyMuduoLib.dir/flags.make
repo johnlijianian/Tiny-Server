@@ -6,5 +6,5 @@ CXX_FLAGS =  -std=c++17 -pthread  -O0 -Wall -g2 -ggdb -fPIC
 
 CXX_DEFINES = -DMyMuduoLib_EXPORTS
 
-CXX_INCLUDES = -I/home/ubuntu/ljn/github/Tiny-Server/day15/src/include 
+CXX_INCLUDES = -I/home/ubuntu/ljn/github/Tiny-Server/day16/src/include 
 

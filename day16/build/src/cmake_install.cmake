@@ -1,4 +1,4 @@
-# Install script for directory: /home/ubuntu/ljn/github/Tiny-Server/day15/src
+# Install script for directory: /home/ubuntu/ljn/github/Tiny-Server/day16/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

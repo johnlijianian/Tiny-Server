@@ -41,8 +41,10 @@ void Server::newConnection(Socket *sock){
         std::function<void(Socket*)> cb = std::bind(&Server::deleteConnection, this, std::placeholders::_1);
         
         conn->SetDeleteConnectionCallback(cb);
+        conn->SetOnMessageCallback(messageCallback_);
         conn->SetOnConnectCallback(connectionCallback_);
         connections[sock->getFd()] = conn;
+        std::cout << "test" << std::endl;
 
         ioLoop->runInLoop(std::bind(&Connection::connectEstablished, conn));
     }

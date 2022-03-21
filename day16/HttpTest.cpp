@@ -53,10 +53,9 @@ void onRequest(const HttpRequest& req, HttpResponse* resp) {
 
 int main()
 {
-  int numThreads = 1;
-  EventLoop *loop;
-  HttpServer server(loop);
-  server.setHttpCallback(onRequest);
+  EventLoop *loop = new EventLoop();
+  HttpServer *server = new HttpServer(loop);
+  server->setHttpCallback(onRequest);
   loop->loop();
 }
 

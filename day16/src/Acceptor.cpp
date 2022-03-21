@@ -6,7 +6,7 @@
 Acceptor::Acceptor(EventLoop *_loop) : loop(_loop)
 {
     sock = new Socket();
-    InetAddress *addr = new InetAddress("127.0.0.1", 8888);
+    InetAddress *addr = new InetAddress("0.0.0.0", 8080);
     sock->bind(addr);
     sock->listen(); 
     // sock->setnonblocking();

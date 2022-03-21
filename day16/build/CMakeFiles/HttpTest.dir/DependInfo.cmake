@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/ubuntu/ljn/github/Tiny-Server/day15/HttpTest.cpp" "/home/ubuntu/ljn/github/Tiny-Server/day15/build/CMakeFiles/HttpTest.dir/HttpTest.cpp.o"
+  "/home/ubuntu/ljn/github/Tiny-Server/day16/HttpTest.cpp" "/home/ubuntu/ljn/github/Tiny-Server/day16/build/CMakeFiles/HttpTest.dir/HttpTest.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -15,7 +15,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/ubuntu/ljn/github/Tiny-Server/day15/build/src/CMakeFiles/MyMuduoLib.dir/DependInfo.cmake"
+  "/home/ubuntu/ljn/github/Tiny-Server/day16/build/src/CMakeFiles/MyMuduoLib.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

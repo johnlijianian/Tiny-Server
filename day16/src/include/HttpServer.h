@@ -36,6 +36,6 @@ class HttpServer{
         void onMessage(Connection* conn, Buffer* buf);
         void onRequest(Connection* conn, HttpRequest& req);
 
-        Server server_;
+        Server *server_;
         HttpCallback httpCallback_;
 };

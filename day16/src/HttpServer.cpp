@@ -20,44 +20,54 @@ bool processRequestLine(const char* begin, const char* end, HttpContext* context
     const char* space = std::find(start, end, ' ');
     HttpRequest& request = context->request();
     if (space != end && request.setMethod(start, space)) { // 解析请求方法(GET/POST)
+        std::cout << "(GET/POST)" << std::endl;
         start = space+1;
         space = std::find(start, end, ' ');
         if (space != end) {
             request.setPath(start, space);	// 解析PATH
+            std::cout << start << std::endl;
+            std::cout << space << std::endl;
             start = space+1;
-            succeed = end-start == 8 && std::equal(start, end-1, "HTTP/1.");
+            succeed = (end-start == 8) && std::equal(start, end-1, "HTTP/1.");
+            std::cout << "succeed:" << succeed << std::endl;
             if (succeed)
             {
                 if (*(end-1) == '1')
                 {
-                request.setVersion(HttpRequest::kHttp11);		// HTTP/1.1
+                    request.setVersion(HttpRequest::kHttp11);		// HTTP/1.1
                 }
                 else if (*(end-1) == '0')
                 {
-                request.setVersion(HttpRequest::kHttp10);		// HTTP/1.0
+                    request.setVersion(HttpRequest::kHttp10);		// HTTP/1.0
                 }
                 else
                 {
-                succeed = false;
+                    succeed = false;
                 }
             }
         }
     }
+    std::cout << "succeed:" << succeed << std::endl;
+    std::cout << "processRequestLine finish" <<std::endl;
     return succeed;
 }
 
 bool parseRequest(Buffer* buf, HttpContext* context){
     bool ok = true;
     bool hasMore = true;
-
+    std::cout << "paraseRequest" << std::endl;
+    buf->ToStr();
     while (hasMore){
         if(context->expectRequestLine()) { // 请求行
             int crlf = buf->findCRLF(); //请求行和请求头中间有CRLF
+            std::cout << "crlf:" << crlf << std::endl;
             if (crlf > 0) {
                 ok = processRequestLine(buf->peek(), buf->peek()+crlf, context);	// 解析请求行
                 if (ok){
+                    std::cout << "ok" << std::endl;
                     context->request().setReceiveTime(Timestamp::now());		// 设置请求时间
                     buf->clear();
+                    buf->ToStr() ;
                     buf->append(buf->peek()+crlf + 2);		// 将请求行从buf中取回，包括\r\n
                     context->receiveRequestLine();	// 将HttpContext状态改为kExpectHeaders
                 } else {
@@ -67,6 +77,7 @@ bool parseRequest(Buffer* buf, HttpContext* context){
                 hasMore = false;
             }
         } else if(context->expectHeaders()) { // 请求头
+            // std::cout << "request header" << std::endl;
             const char* crlf = buf->peek()+buf->findCRLF();
 
             if (crlf) {
@@ -78,6 +89,7 @@ bool parseRequest(Buffer* buf, HttpContext* context){
                     context->receiveHeaders();		// HttpContext将状态改为kGotAll
                     hasMore = !context->gotAll();
                 }
+
             } else {
                 hasMore = false;
             }
@@ -99,24 +111,26 @@ HttpServer::HttpServer(EventLoop* loop
             // const InetAddress& listenAddr,
             // const string& name
 ):
-    server_(loop), 
+    server_(new Server(loop)), 
     httpCallback_(defaultHttpCallback) 
 {
-    server_.setConnectionCallback(std::bind(&HttpServer::onConnection, this, std::placeholders::_1));
-    server_.setMessageCallback(std::bind(&HttpServer::onMessage, this, std::placeholders::_1, std::placeholders::_2));
+    server_->setConnectionCallback(std::bind(&HttpServer::onConnection, this, std::placeholders::_1));
+    server_->setMessageCallback(std::bind(&HttpServer::onMessage, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 HttpServer::~HttpServer() {}
 
 void HttpServer::onConnection(Connection* conn){
+    std::cout << "HttpServer::onConnection" << std::endl;
     conn->setContext(HttpContext()); // TcpConnection与一个HttpContext绑定
 }
 
 void HttpServer::onMessage(Connection* conn, Buffer* buf){
+    std::cout << "HttpServer::onMessage" << std::endl;
+
     HttpContext *context = std::any_cast<HttpContext>(conn->getMutableContext());
     if(!parseRequest(buf, context)) {
-
-        conn->SetSendBuffer(std::string("HTTP/1.1 400 Bad Request\r\n\r\n").c_str());
+        conn->SetSendBuffer(std::string("HTTP/1.1 400 Bad request\r\n\r\n").c_str());
         conn->Write();
         std::cout<<"无法访问"<<std::endl;
         exit(1);

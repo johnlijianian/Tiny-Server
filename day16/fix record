@@ -48,6 +48,16 @@
     3. 梳理Muduo中的回调函数【整理于record.txt】
     4. 修改Server类
 
+2022-03-18
+    1. 完成Server类的修改
+    2. 完成Segment default的修改
+    3. 需要对Acceptor进行优化（修改成可以设定地址的服务器）
+    4. 理解IP和端口的问题
+
+2022-03-21
+    1. 修改Connection相关回调
+    2. 当前正卡在HttpServer的解析
+
 To do list:
     1. 定时器（22-03-15完成）
     2. HTTP实现
